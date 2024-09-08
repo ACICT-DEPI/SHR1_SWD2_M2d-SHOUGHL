@@ -3,6 +3,9 @@ const User = require('../models/User.js')
 const express = require('express')
 const Router = express.Router()
 const bcrypt = require('bcryptjs')
+const dotenv = require('dotenv')
+const jwt = require('jsonwebtoken')
+dotenv.config()
 
 
 function validateUserPost(obj){
@@ -38,9 +41,17 @@ Router.post('/register', async (req, res) => {
         if( error ){
             return res.json({message: error.details[0].message })
         }
-        const newUser = await new User(req.body)
+
+        const salt = await bcrypt.genSalt(10)
+        const hashedPassword = await bcrypt.hash(req.body.userPassword, salt)
+
+        const genToken = jwt.sign({ id: req.body._id, email: req.body.userEmail }, process.env.SECRET_KEY)
+
+        const newUser = await new User({ ...req.body, token: genToken, userPassword: hashedPassword})
         await newUser.save()
-        res.status(201).json({status: 'success', data: newUser})
+
+        return res.status(201).json({status: 'success', data: newUser})
+        
     } catch (error) {
         res.json({status: 'failed', data: error.message})
     }

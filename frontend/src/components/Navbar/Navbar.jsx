@@ -9,7 +9,7 @@ return (
     <Container style={{width: '80%'}}>
         <span className='nav-top'></span>
         <Navbar.Brand href="#home">
-            <img src ={require("../../assets/brand.png")} alt="" />
+            <img src ={require("../../assets/brand.png")} alt="" className='ml-4' />
         </Navbar.Brand>
         <Navbar.Toggle aria-controls="basic-navbar-nav" />
         <Navbar.Collapse id="basic-navbar-nav">
@@ -27,7 +27,9 @@ return (
             </div>
             <div className="account d-flex gap-2">
                 <Button className='text-nowrap'>كن مشتغل</Button>
-                <Button className='text-nowrap'>تسجيل الدخول</Button>
+                <Button className='text-nowrap'>
+                    <Link className='text-[#1EAAAD] text-decoration-none' to="register">تسجيل الدخول</Link>
+                </Button>
             </div>
     </Container>
     </Navbar>

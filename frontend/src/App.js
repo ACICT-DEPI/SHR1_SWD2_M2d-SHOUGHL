@@ -5,6 +5,7 @@ import SearchBar from './components/Searchbar/SearchBar.jsx';
 import Footer from './components/Footer/Footer.jsx';
 import { Route, Routes } from 'react-router-dom';
 import Home from './components/Routes/Home/Home.jsx';
+import Regiter from './components/Routes/Register/Regiter.jsx';
 
 function App() {
   return (
@@ -13,7 +14,7 @@ function App() {
       <SearchBar />
       <Routes>
         <Route path='/' element={<Home />} />
-        <div></div>
+        <Route path='register' element={<Regiter />} />
       </Routes>
       <Footer />
     </div>
