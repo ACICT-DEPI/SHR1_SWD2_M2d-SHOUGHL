@@ -6,14 +6,20 @@ import reportWebVitals from './reportWebVitals';
 import { BrowserRouter } from 'react-router-dom';
 import { Provider } from 'react-redux';
 import { store } from './Redux/Stores/store';
+import { SnackbarProvider } from 'notistack'
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
     <BrowserRouter>
-      <Provider store={store}>
-        <App />
-      </Provider>
+      <SnackbarProvider anchorOrigin={{
+    vertical: 'top',
+    horizontal: 'right',
+  }}>
+        <Provider store={store}>
+          <App />
+        </Provider>
+      </SnackbarProvider>
     </BrowserRouter>
   </React.StrictMode>
 );

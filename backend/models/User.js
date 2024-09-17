@@ -4,16 +4,14 @@ const validator = require('validator')
 const userSchema = new mongoose.Schema(
     {
         username: String,
-        userEmail: String,
-        // userEmail: {
-        //     type: String,
-        //     valid: validator.isEmail
-        // },
+        userEmail: {
+            type: String,
+            valid: validator.isEmail('foo@bar.com')
+        },
         userPassword: String,
-        isProvider: Boolean,
-        serviceTitle: String,
-        serviceDetails: String,
-        servicePrice: Number,
+        userImage: String,
+        userCountry: String,
+        userPhoneNumber: String,
         token: String
     },
     {

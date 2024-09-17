@@ -10,17 +10,17 @@ dotenv.config()
 
 
 
+app.use(express.json())
+app.use(cors())
+
 mongoose.
-connect(process.env.MONGO_URL)
-.then(()=> {
-    console.log('connection successful');
+        connect(process.env.MONGO_URL)
+        .then(()=> {
+            console.log('connection successful');
 })
 
-app.use(cors())
-app.use(express.json())
-app.use(express.urlencoded({extended: false}))
-app.use('/api/users', usersPath)
 
+app.use('/api/users', usersPath)
 
 
 app.listen(process.env.PORT, ()=> {
