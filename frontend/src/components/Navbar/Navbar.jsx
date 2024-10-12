@@ -1,53 +1,49 @@
 
-import { Button, Container, Nav, Navbar } from 'react-bootstrap'
 import './Navbar.css'
+import { Button, Container, Nav, Navbar } from 'react-bootstrap'
 import { Link, useNavigate } from 'react-router-dom'
 import { useEffect, useState } from 'react'
 
 const NavBar = () => {
     const navigate = useNavigate()
 
-    const [user, setUser] = useState()
+    const [ user, setUser ] = useState({})
+
     useEffect(() => {
-        if(localStorage.getItem('user')){
-            setUser(localStorage.getItem('user'))
+        if(localStorage.getItem('currentUser')){
+            setUser(JSON.parse(localStorage.getItem('currentUser')))
         }
     }, [])
 
+
 return (
     <Navbar expand="lg" className='p-0' style={{boxShadow: '0 2px 0 0 #eee'}}>
-    <Container style={{width: '80%'}}>
+    <Container>
         <span className='nav-top'></span>
-        <Navbar.Brand href="#home">
+        <Navbar.Brand onClick={()=> navigate('/')}>
             <img src ={require("../../assets/brand.png")} alt="" className='ml-4' />
         </Navbar.Brand>
         <Navbar.Toggle aria-controls="basic-navbar-nav" />
         <Navbar.Collapse id="basic-navbar-nav">
             <Nav >
-                <Link className='link' to='/'> الرئيسية </Link>
-                <Link className='link'> الاعلانات </Link>
-                <Link className='link'> الطلبات </Link>
-                <Link className='link'> المشتغلين </Link>
-                <Link className='link'> تواصل معنا </Link>
+                <Link to='/' className='link'> الرئيسية </Link>
+                <Link to='/services' className='link'> الخدمات </Link>
+                <Link to='/providers' className='link'> المشتغلين </Link>
+                <Link to='/contact' className='link'> تواصل معنا </Link>
             </Nav>
         </Navbar.Collapse>
         <div className="d-flex gap-2 mx-5 nav-extra">
-                <Link ><i className="fa-regular fa-message"></i></Link>
-                <Link ><i className="fa-regular fa-bell"></i></Link>
+                <Link to='/chat' ><i className="fa-regular fa-message"></i></Link>
             </div>
-            {!user ? <div className="account d-flex gap-2">
-                <Button className='text-nowrap'>
-                    <Link className='text-white text-decoration-none' to={'login'}> تسجيل دخول </Link>
-                </Button>
+            {!user.id ? <div className="account d-flex gap-2">
+                <Button className='text-nowrap' onClick={()=> navigate('/login')}> تسجيل دخول </Button>
                 <div className='w-1 h-7 rounded bg-[#1EAAAD] mt-2'></div>
-                <Button className='text-nowrap'>
-                    <Link className='text-[#1EAAAD] text-decoration-none' to="register"> إنشأ حساب </Link>
-                </Button>
+                <Button className='text-nowrap' onClick={()=> navigate('/register') }> إنشأ حساب </Button>
             </div> 
             : 
-            <div className='d-flex' onClick={() => navigate('profile')}>
-                <img src="" alt="" className='rounded-circle w-1 h-1 cursor-pointer' />
-                <div>{JSON.parse(localStorage.getItem('user')).name}</div>
+            <div className='d-flex px-2 cursor-pointer align-items-center' style={{borderRadius: '30px', border: '1px solid #1EAAAD'}} onClick={() => navigate(`/profile/${user.id}`)}>
+                <img src={require('../../assets/user.jpg')} alt="" className='rounded-circle ratio ratio-1x1 m-0' />
+                <div>{ user.name }</div>
             </div> }
     </Container>
     </Navbar>

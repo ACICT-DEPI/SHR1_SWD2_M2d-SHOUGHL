@@ -12,14 +12,30 @@ const BeProvider = () => {
 
     const { enqueueSnackbar } = useSnackbar()
 
-    const handleSubmit = () => {
-        
+    const handleSubmit = async () => {
+        const res = await fetch('http://localhost:4000/api/services',{
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({  
+                serviceTitle,      
+                serviceDetails,   
+                servicePrice,
+                serviceCategory
+                                })
+        })
+        const data = await res.json()
+        if(data.success){
+            enqueueSnackbar(data.data, {variant: 'success'})
+            navigate('/')
+        } else {
+            enqueueSnackbar(data.data, {variant: 'error'})
+        }
     }
 
 return(
     <div className='white-ground'>
         <div className='container regiter'>
-            <form method='post' action='' className='d-flex flex-column gap-2 w-25 mx-auto rounded p-3 sign-form mt-36'>
+            <form method='post' action='' className='d-flex flex-column gap-2 w-50 mx-auto rounded p-3 sign-form mt-36'>
                 <img src ={require("../../assets/brand.png")} alt="" className='mx-auto' />
                 <label htmlFor="username"> اسم الخدمة </label>
                 <input  type="text"
@@ -38,14 +54,14 @@ return(
                 }} 
                 />
                 <label htmlFor="password"> سعر الخدمة </label>
-                <input  type="password" 
+                <input  type="number" 
                         id='password' 
                         value={servicePrice} onInput={(e) => {
                             setServicePrice(e.target.value)
                 }} 
                 />
                 <label htmlFor="password"> نوع الخدمة </label>
-                <input  type="password" 
+                <input  type="text" 
                         id='password' 
                         value={serviceCategory} onInput={(e) => {
                             setServiceCategory(e.target.value)
@@ -57,7 +73,7 @@ return(
                         onClick={(e) =>{
                             e.preventDefault()
                             handleSubmit()
-                            }}> أنشأ حسابك </button>
+                            }}> إضافة الخدمة </button>
                 <Link to={'/'} style={{textDecoration: 'none'}}> لاحقا </Link>
             </form>
         </div>

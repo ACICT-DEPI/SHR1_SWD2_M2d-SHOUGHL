@@ -12,6 +12,7 @@ const Regiter = () => {
     const [ isProvider, setIsProvider ] = useState(false)
     const navigate = useNavigate();
 
+
     const { enqueueSnackbar } = useSnackbar()
 
     const handleSubmit = async () => {
@@ -28,14 +29,11 @@ const Regiter = () => {
         const data = await res.json()        
         if(data.success){
             enqueueSnackbar(data.data, {variant: 'success'})
-            localStorage.setItem('user', JSON.stringify({Email: data.body.userEmail, 
-                                                        Token: data.body.token, 
-                                                        name: data.body.username, 
-                                                        id: data.body._id}))
+            localStorage.setItem('currentUser', JSON.stringify(data.body))
             if(isProvider){
-                navigate('beProvider')
+                navigate(`/beProvider/${data.body._id}`)
             }else {
-                navigate('/')
+                navigate(`/`)
             }
         }else {
             enqueueSnackbar(data.data, {variant: 'error'})
@@ -46,7 +44,7 @@ const Regiter = () => {
     return (
     <div className='white-ground'>
         <div className='container regiter'>
-            <form method='post' action='' className='d-flex flex-column gap-2 w-25 mx-auto rounded p-3 sign-form mt-36'>
+            <form method='post' action='' className='d-flex flex-column gap-2 w-50 mx-auto rounded p-3 sign-form mt-36'>
                 <img src ={require("../../../assets/brand.png")} alt="" className='mx-auto' />
                 <label htmlFor="username"> اسم المستخدم </label>
                 <input  type="text"
@@ -71,10 +69,12 @@ const Regiter = () => {
                             setUserPassword(e.target.value)
                 }} 
                 />
-                <label htmlFor='providing' > هل تريد تقديم خدماتك للمستخدمين؟ </label>
-                <input type='checkbox' name='providing' checked={isProvider} onChange={ (e) => {
-                    setIsProvider(e.target.checked)
-                }} />
+                <div>
+                    <label htmlFor='providing'  className='mx-3'> هل تريد تقديم خدماتك للمستخدمين؟ </label>
+                    <input type='checkbox' name='providing' checked={isProvider} onChange={ (e) => {
+                        setIsProvider(e.target.checked)
+                    }} />
+                </div>
                 <hr className='mx-auto'/>
                 <button  type="submit" 
                         className='submit hover:bg-[#1EAAAD] hover:text-white p-2 rounded' 
@@ -82,7 +82,7 @@ const Regiter = () => {
                             e.preventDefault()
                             handleSubmit()
                             }}> أنشأ حسابك </button>
-                <div style={{fontSize: '13px'}}> لديك حساب بالفعل؟  <Link to={'login'} style={{textDecoration: 'none'}}> سجل الآن </Link> </div>
+                <div style={{fontSize: '13px'}}> لديك حساب بالفعل؟  <Link to={'/login'} style={{textDecoration: 'none'}}> سجل الآن </Link> </div>
             </form>
         </div>
     </div>

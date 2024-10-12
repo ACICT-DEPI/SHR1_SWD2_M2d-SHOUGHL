@@ -1,9 +1,9 @@
 import React from 'react'
-import { Button } from 'react-bootstrap';
+import { Button, Container } from 'react-bootstrap';
 
 const WhyUs = () => {
 return (
-    <div className='whyus w-75 mx-auto py-5'>
+    <Container className='whyus mx-auto py-5'>
         <div className="why-content d-flex gap-4 flex-column">
             <h2 className='text-[#02385A]'> لماذا طلب عرض سعر أفضل؟ </h2>
             <hr className='mx-auto my-0'/>
@@ -26,9 +26,9 @@ return (
                     </form>
             </div>
             <div className="sec2 d-flex justify-content-between">
-                <div className="yt-vid w-5/12 h-60">
+                {/* <div className="yt-vid w-5/12 h-60">
                     <iframe src="https://www.youtube.com/watch?v=l-aV3qt6dKw" frameborder="0" title='buisness' className='w-100 h-full'></iframe>
-                </div>
+                </div> */}
                 <div className="two-items d-flex gap-3 w-50">
                     <div className="item">
                         <i class="fa-solid fa-file-invoice-dollar"></i>
@@ -41,7 +41,7 @@ return (
                 </div>
             </div>
         </div>
-    </div>
+    </Container>
 )
 }
 

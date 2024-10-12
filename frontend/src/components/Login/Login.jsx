@@ -24,8 +24,8 @@ const Login = () => {
         const data = await res.json()        
         if(data.success){
             enqueueSnackbar(data.data, {variant: 'success'})
-            localStorage.setItem('user', JSON.stringify({Email: data.body.userEmail, Token: data.body.token, name: data.body.username}))
-            navigate('/')
+            localStorage.setItem('currentUser', JSON.stringify(data.body))
+            navigate(`/`)
         }else {
             enqueueSnackbar(data.data, {variant: 'error'})
             if(data.data.includes('Password')){
@@ -37,7 +37,7 @@ const Login = () => {
 return (
     <div className='white-ground'>
         <div className='container regiter'>
-            <form method='post' action='' className='d-flex flex-column gap-2 w-25 mx-auto rounded p-3 sign-form mt-36'>
+            <form method='post' action='' className='d-flex flex-column gap-2 w-50 mx-auto rounded p-3 sign-form mt-36'>
                 <img src ={require("../../assets/brand.png")} alt="" className='mx-auto' />
                 <label htmlFor="userEmail"> البريد الالكترونى </label>
                 <input  type="text" 
@@ -54,7 +54,7 @@ return (
                             setUserPassword(e.target.value)
                 }} 
                 />
-                {forgotPassword && <div><Link to={'forgotPassword'}> نسيت كلمة السر؟ </Link></div>}
+                {forgotPassword && <div><Link to={'/forgotPassword'}> نسيت كلمة السر؟ </Link></div>}
                 <hr className='mx-auto'/>
                 <button  type="submit" 
                         className='submit hover:bg-[#1EAAAD] hover:text-white p-2 rounded' 

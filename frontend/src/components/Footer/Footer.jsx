@@ -1,13 +1,14 @@
+import { Container } from 'react-bootstrap'
 import './Footer.css'
 
 const Footer = () => {
 return (
     <div className='footer py-5' style={{backgroundColor: '#02385A', position: 'relative'}}>
         <span></span>
-                <div className='d-flex justify-content-starrt w-75 mx-auto'>
+        <Container className="mx-auto d-flex justify-content-between ">
+                <div className='d-flex justify-content-starrt w-25'>
                     <img src={require('../../assets/brand.png')} alt="" />
                 </div>
-        <div className="w-75 mx-auto d-flex justify-content-between ">
             <div className=" py-2">
                 <p> معلومات عن شغل </p>
                 <p> الأسئلة الشائعة </p>
@@ -55,7 +56,7 @@ return (
                 <i className="fa-brands fa-facebook"></i>
                 </div>
             </div>
-        </div>
+        </Container>
         <div className="copy-right text-white" lang='en' dir='ltr'>
             Copyright <sup>&copy;</sup> 2024 All rights are perserved | DEPI.
         </div>

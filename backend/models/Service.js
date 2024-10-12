@@ -1,17 +1,20 @@
 const mongoose = require('mongoose')
-const { castObject } = require('./Provider')
-const Provider = require('./Provider')
 
 const servicesSchema = new mongoose.Schema(
     {
-        _id: mongoose.Schema.Types.ObjectId,
         provider: [{
-            type: mongoose.Schema.Types.ObjectId, ref: 'Provider'
+            type: mongoose.Schema.Types.ObjectId, ref: 'User'
         }],
+        users: [{
+                type: mongoose.Schema.Types.ObjectId, ref: 'User'
+            }],
         serviceTitle: String,
         serviceDetails: String,
         servicePrice: Number,
-        serviceCategory: String
+        serviceCategory: String,
+        currentState: {
+            enum: ['inProgress', 'done', 'delivered', 'canceled']
+        }
     },
     {
         timestamps: true
