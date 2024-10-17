@@ -1,5 +1,5 @@
 import React from 'react'
-import { Button, Container } from 'react-bootstrap';
+import { Container } from 'react-bootstrap';
 
 const WhyUs = () => {
 return (
@@ -17,18 +17,7 @@ return (
                     <p> ثالثا : ستتصفح السيرة الذكية للمشتغلين الجاهزين لخدمتك </p>
                     <p> رابعا : ستختار السعر والمشتغل المناسب لك بكل ثقة وراحة بال </p>
                 </div>
-                    <form action="#" className='why-form bg-[#F8FAFC] p-3 d-flex flex-column w-50'>
-                        <label htmlFor="address"> عنوان الطلب </label>
-                        <input type="text" id='address' className='p-2'/>
-                        <label htmlFor="details"> تفاصيل الطلب </label>
-                        <textarea className='resize-none' rows={3} id="details" style={{outline: 'none'}}></textarea>
-                        <Button className='w-25 mt-4 text-white border-0 rounded p-2 align-self-end' style={{backgroundColor: '#1EAAAD'}}> ارسال </Button>
-                    </form>
-            </div>
-            <div className="sec2 d-flex justify-content-between">
-                {/* <div className="yt-vid w-5/12 h-60">
-                    <iframe src="https://www.youtube.com/watch?v=l-aV3qt6dKw" frameborder="0" title='buisness' className='w-100 h-full'></iframe>
-                </div> */}
+
                 <div className="two-items d-flex gap-3 w-50">
                     <div className="item">
                         <i class="fa-solid fa-file-invoice-dollar"></i>

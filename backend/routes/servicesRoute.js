@@ -10,7 +10,6 @@ const {
     buyService}
 
 = require('../controlers/servicesControler.js');
-const protectRoute = require('../Utiles/protectRoute.js');
 
 
 Router.route('/').get(getServices)
@@ -22,6 +21,7 @@ Router.route('/:userId').get(getServiceById)
                         .post(createService)
 
                         
-Router.get('/:serviceId/:userId', buyService) 
+Router.route('/:serviceId/:userId').get(buyService)
+                                                
 
 module.exports = Router;

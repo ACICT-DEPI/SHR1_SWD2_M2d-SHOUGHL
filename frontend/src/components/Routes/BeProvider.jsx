@@ -1,6 +1,6 @@
 import { useSnackbar } from 'notistack'
 import React, { useState } from 'react'
-import { Link, useNavigate } from 'react-router-dom'
+import { Link, useNavigate, useParams } from 'react-router-dom'
 
 const BeProvider = () => {
 
@@ -12,8 +12,10 @@ const BeProvider = () => {
 
     const { enqueueSnackbar } = useSnackbar()
 
+    const { id } = useParams()
+
     const handleSubmit = async () => {
-        const res = await fetch('http://localhost:4000/api/services',{
+        const res = await fetch(`http://localhost:4000/api/services/${id}`,{
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({  

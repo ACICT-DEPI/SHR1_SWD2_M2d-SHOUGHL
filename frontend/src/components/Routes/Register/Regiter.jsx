@@ -2,6 +2,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { useSnackbar } from 'notistack'
 import './Regiter.css'
 import { useState } from 'react';
+import { useDispatch } from 'react-redux';
 
 
 const Regiter = () => {
@@ -11,6 +12,7 @@ const Regiter = () => {
     const [ userPassword, setUserPassword ] = useState('')
     const [ isProvider, setIsProvider ] = useState(false)
     const navigate = useNavigate();
+    const dispatch = useDispatch()
 
 
     const { enqueueSnackbar } = useSnackbar()
@@ -30,6 +32,7 @@ const Regiter = () => {
         if(data.success){
             enqueueSnackbar(data.data, {variant: 'success'})
             localStorage.setItem('currentUser', JSON.stringify(data.body))
+            dispatch({type: 'autherizeUser', payload: data.body})
             if(isProvider){
                 navigate(`/beProvider/${data.body._id}`)
             }else {

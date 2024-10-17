@@ -17,7 +17,7 @@ root.render(
     horizontal: 'right',
   }}>
         <Provider store={store}>
-          <App />
+            <App />
         </Provider>
       </SnackbarProvider>
     </BrowserRouter>

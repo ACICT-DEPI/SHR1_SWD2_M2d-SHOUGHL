@@ -9,28 +9,17 @@ const multer  = require('multer')
 dotenv.config()
 const storage = multer.diskStorage({
     destination: (req, file, cb) => {
-        cb(null, '../Images/'); // Folder where images will be saved
+        cb(null, "Images/"); // Folder where images will be saved
     },
     filename: (req, file, cb) => {
-        cb(null, Date.now() + path.extname(file.originalname)); // Naming the file with a timestamp
+        cb(null, Date.now() + file.originalname); // Naming the file with a timestamp
     }
 });
 
 // Initialize multer
 const upload = multer({
     storage: storage,
-    limits: { fileSize: 1000000 }, // Limit file size to 1MB
-    fileFilter: (req, file, cb) => {
-        const fileTypes = /jpeg|jpg|png|gif/;
-        const extname = fileTypes.test(path.extname(file.originalname).toLowerCase());
-        const mimetype = fileTypes.test(file.mimetype);
-        if (mimetype && extname) {
-            return cb(null, true);
-        } else {
-            cb('Error: Images only!');
-        }
-    }
-}).single('userImage');
+})
 
 function validateUserPost(obj){
     const schema = Joi.object({
@@ -83,27 +72,22 @@ const loginUser = async (req, res) => {
     if(!loggingInUser){
         return res.status(500).json({data: 'This Email is not registered!', success: false})
     }
-    const isPasswordCorrect = bcrypt.compare( req.body.userPassword, loggingInUser.userPassword)
+    const isPasswordCorrect = await bcrypt.compare( req.body.userPassword, loggingInUser.userPassword)
     if(!isPasswordCorrect){
         return res.status(500).json({data: 'Password is wrong', success: false})
     }
-    const genToken = jwt.sign({ id: req.body._id, email: req.body.userEmail }, process.env.SECRET_KEY, {
+    const genToken = jwt.sign({ id: loggingInUser._id, email: loggingInUser.userEmail }, process.env.SECRET_KEY, {
         expiresIn: '15d'
     })
-    return res.status(200).cookie('jwt', genToken, {maxAge: 10*24*60*60*1000, sameSite: 'None'}).json({data: 'Logged in Successfully', success: true, body: {
+
+    return res.status(200).json({data: 'Logged in Successfully', success: true, body: {
         id: loggingInUser._id,
         email: loggingInUser.userEmail,
-        name: loggingInUser.username
+        name: loggingInUser.username, 
+        image: loggingInUser.userImage
     }})
 }
 
-const logOutUser = async (req, res) => {
-    try {
-        res.status(200).cookie('jwt', {}, {maxAge: 0}).json({success: true, data: 'Logged out successfully'})
-    } catch (error) {
-        res.status(400).json({success: false, data: error.message})
-    }  
-}
 
 const createUser = async (req, res) => {
     try {
@@ -121,7 +105,7 @@ const createUser = async (req, res) => {
         const hashedPassword = await bcrypt.hash(req.body.userPassword, salt)
 
         
-        const newUser = new User({ ...req.body, userPassword: hashedPassword})
+        const newUser = new User({ ...req.body , userImage: "/Images/default.png", userPassword: hashedPassword})
 
 
         const genToken = jwt.sign({ id: newUser._id, email: req.body.userEmail }, process.env.SECRET_KEY, {
@@ -131,12 +115,11 @@ const createUser = async (req, res) => {
         
         await newUser.save()
 
-        return res.status(201).cookie('jwt', genToken, {
-            maxAge: 15*24*60*60*1000 , sameSite: 'None'
-        }).json({data: 'User Added Successfully', success: true, body: {
+        return res.status(201).json({data: 'User Added Successfully', success: true, body: {
             id: newUser._id,
             email: newUser.userEmail,
-            name: newUser.username
+            name: newUser.username, 
+            image: newUser.userImage
         }})
         
     } catch (error) {
@@ -146,19 +129,29 @@ const createUser = async (req, res) => {
 
 const updateUser = async (req, res) => {
     try {
-        if(!User.findById(req.params.userId)){
+        const user = await User.findById(req.params.userId)
+        if(!user){
             return res.status(404).json({success: false, data: 'User not found'})
         }
+        
         const { error } = validateUserPut(req.body)
         if( error ){
             return res.json({message: error.details[0].message })
         }
-        const user = await User.findByIdAndUpdate(req.params.userId, {
+        const isPasswordCorrect = await bcrypt.compare(user.userPassword, req.body.userConfirmPassword)
+        if(!isPasswordCorrect){
+            return res.status(400).json({data: 'Password is not correct', success: false})
+        }
+        const newUser = await User.findByIdAndUpdate(req.params.userId, {
             $set:{
-                ...req.body
+                username: req.body.username,
+                userPassword: req.body.userNewPassword,
+                userPhoneNumber: req.body.userPhoneNumber,
+                userCountry: req.body.userCountry,
+                userGender: req.body.userGender,
             }
         }, { new: true })
-        return res.status(200).json({data: user, success: true})
+        return res.status(200).json({data: newUser, success: true})        
     } catch (error) {
         res.json({status: 'failed', data: error.message})
     }
@@ -178,35 +171,19 @@ const deleteUser = async (req, res) => {
 }
 
 
-const uploadImage = async (req, res) => {
-    try {
-        // Check if there's a file in the request
-        if (!req.file) {
-            return res.status(400).json({ message: 'No file uploaded' });
-        }
-
-        // Find the user by ID and update the userImage field with the file path
-        const user = await User.findByIdAndUpdate(req.params.userId, {
-            userImage: `../Images/${req.file.filename}`
-        }, { new: true });
-
-        if (!user) {
-            return res.status(404).json({ message: 'User not found' });
-        }
-
-        res.status(200).json({
-            message: 'Profile image updated successfully',
-            user
-        });
-    } catch (error) {
-        res.status(500).json({ message: error.message });
-    }
-}
-
 
 const getProviders = async (req, res) => {
     try {
-        const providers = await User.find({isProvider: true}).populate('servicesProvided').populate('servicesUsed')
+        const providers = await User.find({isProvider: true, _id: { $ne: req.params.userId}}).populate('servicesProvided').populate('servicesUsed')
+        res.status(200).json({success: true, data: providers})
+    } catch (error) {
+        res.status(400).json({success: false, data: error.message})
+    }
+}
+
+const getConversations = async (req, res) => {
+    try {
+        const providers = await User.find({_id: { $ne: req.params.userId}}).populate('servicesProvided').populate('servicesUsed')
         res.status(200).json({success: true, data: providers})
     } catch (error) {
         res.status(400).json({success: false, data: error.message})
@@ -222,7 +199,7 @@ module.exports = {
     getUsers,
     getUser,
     upload,
-    uploadImage,
+    // uploadImage,
     getProviders,
-    logOutUser
+    getConversations
 }

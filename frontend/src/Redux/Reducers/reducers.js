@@ -1,16 +1,25 @@
 
 const initialState = {
-    loggedInUser: '',
+    currentUser: null,
     isActive: false,
-    providerRating: 0
+    loggedInUser: '',
+    selectedConversation :null,
+    messages: [],
+    selectedRoute: ''
 }
 
 export const reducer = (state = initialState, action) => {
     switch(action.type){
-        case 'userlogIn':
-            return {...state, loggedInUser: action.payload, isActive: true}
-        case 'userlogOut':
-            return {...state, loggedInUser: {}, isActive: false}
+        case 'setSelectedConversation':
+            return {...state, selectedConversation: action.payload}
+        case 'setMessages':
+            return {...state, messages: action.payload}
+        case 'autherizeUser':
+            return {...state, currentUser: action.payload, isActive: true}
+        case 'unAautherizeUser':
+            return {...state, currentUser: null, isActive: false}
+        case 'setSelected':
+            return {...state, selectedRoute: action.payload}
         default: 
             return state;
     }

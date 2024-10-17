@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import NavBar from '../Navbar/Navbar'
-import SearchBar from '../Searchbar/SearchBar'
 import Footer from '../Footer/Footer'
 import { Button, Container } from 'react-bootstrap'
 import { MdOutlineAddShoppingCart } from 'react-icons/md'
@@ -33,7 +32,6 @@ return (
     <div>
         <div style={{ position: 'sticky', top: '0', zIndex: '10', backgroundColor: 'white'}}>
         <NavBar />
-        <SearchBar />
         </div>
 
         <Container className='d-flex my-4 p-3 bg-[#eee] gap-5 text-end'>

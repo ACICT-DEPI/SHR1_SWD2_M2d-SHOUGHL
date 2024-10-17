@@ -1,13 +1,14 @@
 import { useState } from 'react'
 import './Login.css'
-import { Link, useNavigate } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 import { useSnackbar } from 'notistack'
+import { useDispatch } from 'react-redux'
 const Login = () => {
 
     const [ userEmail, setUserEmail ] = useState('')
     const [ userPassword, setUserPassword ] = useState('')
-    const [ forgotPassword, setForgotPassword ] = useState(false)
     const navigate = useNavigate();
+    const dispatch = useDispatch()
 
     const { enqueueSnackbar } = useSnackbar()
 
@@ -25,12 +26,10 @@ const Login = () => {
         if(data.success){
             enqueueSnackbar(data.data, {variant: 'success'})
             localStorage.setItem('currentUser', JSON.stringify(data.body))
+            dispatch({type: 'autherizeUser', payload: data.body})
             navigate(`/`)
         }else {
             enqueueSnackbar(data.data, {variant: 'error'})
-            if(data.data.includes('Password')){
-                setForgotPassword(true)
-            }
         }
 }
 
@@ -54,7 +53,6 @@ return (
                             setUserPassword(e.target.value)
                 }} 
                 />
-                {forgotPassword && <div><Link to={'/forgotPassword'}> نسيت كلمة السر؟ </Link></div>}
                 <hr className='mx-auto'/>
                 <button  type="submit" 
                         className='submit hover:bg-[#1EAAAD] hover:text-white p-2 rounded' 
